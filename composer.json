@@ -1,0 +1,14 @@
+{
+    "name": "svi/tengine",
+    "description": "Template system for svi framework",
+    "license": "MIT",
+    "require": {
+        "svi/base": ">=1.0",
+        "twig/twig": ">=2.4"
+    },
+    "autoload": {
+        "psr-4" : {
+            "Svi\\TengineBundle\\" : ""
+        }
+    }
+}

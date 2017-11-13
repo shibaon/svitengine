@@ -100,7 +100,7 @@ class TemplateService extends AppContainer
                 /** @var \Twig_Loader_Filesystem $loader */
                 $loader = $this->app['twig']->getLoader();
                 $loader->addPath($path);
-                $app['TengineLoadPath.' . $path] = true;
+                $this->app['TengineLoadPath.' . $path] = true;
             }
         }
     }

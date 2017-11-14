@@ -8,7 +8,7 @@ use Svi\TengineBundle\Twig\SviExtension;
 
 class TemplateService extends AppContainer
 {
-	const TEMPLATE_PROCESSOR_TWIG = 'twig';
+	const ENGINE_TWIG = 'twig';
 
 	private $processors = [];
 	private $onLoads = [];
@@ -34,16 +34,16 @@ class TemplateService extends AppContainer
 
                 return $twig;
             };
-            $this->addProcessor('twig', 'twig');
+            $this->addEngine('twig', 'twig');
         }
 	}
 
-	public function addProcessor($type, $instance)
+	public function addEngine($type, $instance)
 	{
 		$this->processors[$type] = $instance;
 	}
 
-	public function getProcessor($type)
+	public function getEngine($type)
 	{
 		if (!array_key_exists($type, $this->processors)) {
 			throw new \Exception('There is no registered "' . $type . '" template processor');
@@ -63,12 +63,12 @@ class TemplateService extends AppContainer
 		}
 
 		switch ($processorType) {
-			case self::TEMPLATE_PROCESSOR_TWIG:
+			case self::ENGINE_TWIG:
 				/** Removing .twig extension if that was in $templateName, because we do not ask template extension
 				 * by default
 				 **/
-				$templateName = preg_replace("/(\\." . self::TEMPLATE_PROCESSOR_TWIG . ')$/', '', $templateName);
-				return $this->getTwig()->render($templateName . '.' . self::TEMPLATE_PROCESSOR_TWIG, $context);
+				$templateName = preg_replace("/(\\." . self::ENGINE_TWIG . ')$/', '', $templateName);
+				return $this->getTwig()->render($templateName . '.' . self::ENGINE_TWIG, $context);
 			default:
 				throw new \Exception('There are no any template processors configured');
 		}
@@ -92,7 +92,7 @@ class TemplateService extends AppContainer
 			throw new \Exception('Twig template processor is not configured');
 		}
 
-		return $this->getProcessor('twig');
+		return $this->getEngine('twig');
 	}
 
 	public function onEngineLoad($callback)

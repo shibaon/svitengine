@@ -3,8 +3,6 @@
 namespace Svi\TengineBundle\Twig;
 
 use Svi\Application;
-use Svi\HttpBundle\Service\HttpService;
-use Svi\HttpBundle\Service\RoutingService;
 
 class SviExtension extends \Twig_Extension
 {
@@ -21,11 +19,7 @@ class SviExtension extends \Twig_Extension
 	public function getFunctions()
 	{
 		return [
-			new \Twig_SimpleFunction('asset', [$this, 'assetFunction']),
-			new \Twig_SimpleFunction('path', [$this, 'pathFunction']),
-			new \Twig_SimpleFunction('url', [$this, 'urlFunction']),
 			new \Twig_SimpleFunction('trans', [$this, 'transFunction']),
-			new \Twig_SimpleFunction('getRequestUri', [$this, 'getRequestUriFunction'])
 		];
 	}
 
@@ -35,11 +29,6 @@ class SviExtension extends \Twig_Extension
 			new \Twig_SimpleFilter('trans', [$this, 'transFunction']),
 			new \Twig_SimpleFilter('plural', [$this, 'pluralFunction']),
 		];
-	}
-
-	public function getRequestUriFunction()
-	{
-		return $this->app[HttpService::class]->getRequest()->getRequestUri();
 	}
 
 	public function pluralFunction($number, $one, $four, $many)
@@ -67,21 +56,6 @@ class SviExtension extends \Twig_Extension
 		return $this->app->getTranslationService()->trans($key, $params);
 	}
 
-	public function urlFunction($route, array $parameters = [])
-	{
-		return $this->app[RoutingService::class]->getUrl($route, $parameters, true);
-	}
-
-	public function pathFunction($route, array $parameters = [])
-	{
-		return $this->app[RoutingService::class]->getUrl($route, $parameters);
-	}
-
-	public function assetFunction($asset)
-	{
-		return '/bundles/' . $asset . '?' . $this->app->getConfigService()->get('assetsVersion');
-	}
-
 	/**
 	 * Returns the name of the extension.
 	 *
@@ -89,7 +63,7 @@ class SviExtension extends \Twig_Extension
 	 */
 	public function getName()
 	{
-		return 'silexEx';
+		return 'svitengineext';
 	}
 
 }

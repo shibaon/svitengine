@@ -11,6 +11,7 @@ class TemplateService extends AppContainer
 	const TEMPLATE_PROCESSOR_TWIG = 'twig';
 
 	private $processors = [];
+	private $onLoads = [];
 
 	public function __construct(Application $app)
 	{
@@ -29,6 +30,7 @@ class TemplateService extends AppContainer
                 if ($this->app['debug']) {
                     $twig->enableDebug();
                 }
+                $this->engineLoaded($twig);
 
                 return $twig;
             };
@@ -93,6 +95,11 @@ class TemplateService extends AppContainer
 		return $this->getProcessor('twig');
 	}
 
+	public function onEngineLoad($callback)
+    {
+        $this->onLoads[] = $callback;
+    }
+
 	public function addLoadPath($path)
     {
         if (!isset($this->app['TengineLoadPath.' . $path])) {
@@ -101,6 +108,17 @@ class TemplateService extends AppContainer
                 $loader = $this->app['twig']->getLoader();
                 $loader->addPath($path);
                 $this->app['TengineLoadPath.' . $path] = true;
+            }
+        }
+    }
+
+    protected function engineLoaded($engine)
+    {
+        foreach ($this->onLoads as $handler) {
+            $reflection = new \ReflectionFunction($handler);
+            $class = $reflection->getParameters()[0]->getClass();
+            if ($class->isInstance($engine)) {
+                $handler($engine);
             }
         }
     }

@@ -4,7 +4,7 @@
     "license": "MIT",
     "require": {
         "svi/base": "0.0.*",
-        "twig/twig": "0.0.*"
+        "twig/twig": ">=2.4"
     },
     "autoload": {
         "psr-4" : {
